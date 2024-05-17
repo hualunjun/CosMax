@@ -5,6 +5,7 @@ Class Incremental Learning Based on Cosine Maximization Loss Function
 Clone this GitHub repository:
 
 `git clone git@github.com:hualunjun/CosMax.git`
+
 `cd CosMax`
 # Dependencies
 1. torch 
