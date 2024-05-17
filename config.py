@@ -1,0 +1,54 @@
+import torch
+from torchvision import transforms
+import numpy as np
+import os
+
+
+class Config:
+    def __init__(self, step):
+
+        self.TrainId = "face-train-b20-20"
+        self.batchsz = 128
+        self.dataset_name = "face"
+        self.step = step
+        self.first_setp_cls = 20
+        self.incr_cls = 20
+        self.classNum = self.first_setp_cls + self.incr_cls*(self.step)
+        self.preClassNum = 0 if self.step == 0 else self.first_setp_cls + self.incr_cls * (self.step - 1)
+        self.reserveNum = 4
+
+        self.trainDir = "./datasets/"+self.dataset_name+"/train"
+        self.testDir = "./datasets/"+self.dataset_name+"/test"
+        self.inversionDir = "./datasets/"+self.dataset_name+"/reserve"
+        self.allClassNum = len(os.listdir(self.trainDir))
+
+        self.pretrain_model_path = "./datasets/barlowtwins.pth"
+        self.model_path = "./model/" + self.TrainId +'-'+str(self.step) + ".pth"
+
+        self.train_transformer = transforms.Compose([
+            # transforms.Resize([32, 32]),
+            transforms.Resize([224, 224]),
+            transforms.RandomCrop([224, 224], padding=28, pad_if_needed=False, fill=0, padding_mode='reflect'),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],  # imagenet
+                                 std=[0.229, 0.224, 0.225])
+        ])
+
+        self.test_transformer = transforms.Compose([
+            # transforms.Resize([32, 32]),
+            transforms.Resize([224, 224]),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],  # imagenet
+                                 std=[0.229, 0.224, 0.225])
+        ])
+
+        self.USE_MULTI_GPU = True
+
+        self.optimizer = "SGD"
+        self.lr = 1
+
+        self.epoch_num = 100
+
+
+
